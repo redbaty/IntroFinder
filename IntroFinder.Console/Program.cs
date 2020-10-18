@@ -2,11 +2,11 @@
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Aif.Core;
+using IntroFinder.Core;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 
-namespace Aif.ConsoleInterface
+namespace IntroFinder.Console
 {
     internal static class Program
     {

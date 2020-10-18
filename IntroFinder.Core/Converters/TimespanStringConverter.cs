@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace Aif.Core.Converters
+namespace IntroFinder.Core.Converters
 {
     internal class TimespanStringConverter : JsonConverter<TimeSpan>
     {

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Aif.Core.Models;
+using IntroFinder.Core.Models;
 
-namespace Aif.Core.Extensions
+namespace IntroFinder.Core.Extensions
 {
     public static class ImageHashExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aif.Core.Exceptions
+namespace IntroFinder.Core.Exceptions
 {
     public class FfmpegException : Exception
     {

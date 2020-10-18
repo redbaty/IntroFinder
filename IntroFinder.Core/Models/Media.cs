@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Aif.Core.Models
+namespace IntroFinder.Core.Models
 {
     public class Media
     {

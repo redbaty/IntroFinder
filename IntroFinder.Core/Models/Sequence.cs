@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text.Json.Serialization;
-using Aif.Core.Converters;
+using IntroFinder.Core.Converters;
 
-namespace Aif.Core.Models
+namespace IntroFinder.Core.Models
 {
     public class Sequence
     {

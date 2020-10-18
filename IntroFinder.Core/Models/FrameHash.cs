@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Aif.Core.Models
+namespace IntroFinder.Core.Models
 {
     public class FrameHash
     {

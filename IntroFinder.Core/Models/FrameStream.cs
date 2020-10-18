@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Aif.Core.Models
+namespace IntroFinder.Core.Models
 {
     public class FrameStream : Stream
     {

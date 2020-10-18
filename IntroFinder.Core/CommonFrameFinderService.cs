@@ -2,11 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Aif.Core.Extensions;
-using Aif.Core.Models;
+using IntroFinder.Core.Extensions;
+using IntroFinder.Core.Models;
 using Microsoft.Extensions.Logging;
 
-namespace Aif.Core
+namespace IntroFinder.Core
 {
     public class CommonFrameFinderService
     {
