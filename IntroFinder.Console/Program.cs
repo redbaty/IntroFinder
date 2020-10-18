@@ -41,7 +41,7 @@ namespace IntroFinder.Console
             serviceCollection.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
             var serviceProvider = serviceCollection.BuildServiceProvider();
 
-            var frameOptions = new FrameFinderOptions {TimeLimit = options.TimeLimit, EnableHardwareAcceleration = options.HardwareAcceleration, MinimumIntroTime = options.MinimumIntroTime, SequenceTolerableSeconds = options.SequenceTolerableSeconds};
+            var frameOptions = new FrameFinderOptions {TimeLimit = options.TimeLimit, EnableHardwareAcceleration = options.HardwareAcceleration, MinimumIntroTime = options.MinimumIntroTime, SequenceTolerableSeconds = options.SequenceTolerableSeconds, BatchSize = options.BatchSize};
 
             var commonFrameFinderService = serviceProvider.GetService<CommonFrameFinderService>();
             var medias = await commonFrameFinderService.FindCommonFrames(directory, frameOptions).ToListAsync();
