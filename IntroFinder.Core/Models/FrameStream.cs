@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace IntroFinder.Core.Models
 {
-    public class FrameStream : Stream
+    internal class FrameStream : Stream
     {
         public FrameStream(Action<int, byte[]> onImageDetected)
         {
@@ -16,8 +16,8 @@ namespace IntroFinder.Core.Models
         private byte[] LastBuffer { get; set; }
         private Action<int, byte[]> OnImageDetected { get; }
 
-        private static byte[] StartSiganture { get; } = {255, 216, 255, 224};
-        private static byte[] EndSiganture { get; } = {255, 217};
+        private static byte[] StartSignature { get; } = {255, 216, 255, 224};
+        private static byte[] EndSignature { get; } = {255, 217};
 
         public override bool CanRead { get; } = false;
         public override bool CanSeek { get; } = false;
@@ -90,8 +90,8 @@ namespace IntroFinder.Core.Models
         public override void Write(byte[] buffer, int offset, int count)
         {
             buffer = buffer[..count];
-            var starts = SearchBytesRecursive(buffer, StartSiganture).ToArray();
-            var ends = SearchBytesRecursive(buffer, EndSiganture).ToArray();
+            var starts = SearchBytesRecursive(buffer, StartSignature).ToArray();
+            var ends = SearchBytesRecursive(buffer, EndSignature).ToArray();
 
             if (LastBuffer != null)
             {
@@ -105,10 +105,7 @@ namespace IntroFinder.Core.Models
                 else if (ends.Length > starts.Length)
                     ends = ends[1..];
 
-                if (ends.Length == 0 && starts.Length == 0)
-                {
-                    return;
-                }
+                if (ends.Length == 0 && starts.Length == 0) return;
             }
 
             var max = starts.Length > ends.Length ? ends.Length : starts.Length;

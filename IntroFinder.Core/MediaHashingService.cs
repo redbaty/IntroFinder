@@ -43,8 +43,7 @@ namespace IntroFinder.Core
             var arguments = argumentsList.Aggregate((x, y) => $"{x} {y}");
             var frameHashes = new List<FrameHash>();
 
-            await using var input = File.OpenRead(filePath);
-            var standardErrorOutput = new StringBuilder();
+            await using var standardInput = File.OpenRead(filePath);
             await using var standardOutput = new FrameStream((frame, data) =>
             {
                 using var image = Image.Load(data);
@@ -63,6 +62,7 @@ namespace IntroFinder.Core
                     File.WriteAllBytes(fileName, data);
                 }
             });
+            var standardErrorOutput = new StringBuilder();
 
             Logger.LogDebug("Starting FFmpeg. {@Arguments}", new
             {
@@ -71,7 +71,7 @@ namespace IntroFinder.Core
             });
 
             var result = await Cli.Wrap("ffmpeg")
-                .WithStandardInputPipe(PipeSource.FromStream(input))
+                .WithStandardInputPipe(PipeSource.FromStream(standardInput))
                 .WithStandardOutputPipe(PipeTarget.ToStream(standardOutput))
                 .WithStandardErrorPipe(PipeTarget.ToStringBuilder(standardErrorOutput))
                 .WithArguments(arguments)
@@ -86,14 +86,10 @@ namespace IntroFinder.Core
 
             foreach (var frameHash in frameHashes)
             {
-                var second = frameHash.Frame / fps;
-                var time = TimeSpan.FromSeconds(second);
-                frameHash.Time = time;
+                frameHash.Time = TimeSpan.FromSeconds(frameHash.Frame / fps);
             }
 
-            var media = new Media(filePath, fps, frameHashes);
-
-            return media;
+            return new Media(filePath, fps, frameHashes);
         }
 
         private static double GetFps(StringBuilder standardErrorOutput)

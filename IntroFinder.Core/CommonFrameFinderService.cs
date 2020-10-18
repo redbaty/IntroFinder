@@ -21,7 +21,8 @@ namespace IntroFinder.Core
 
         private ILogger<CommonFrameFinderService> Logger { get; }
 
-        public async IAsyncEnumerable<Media> FindCommonFrames(DirectoryInfo directory, FrameFinderOptions options = null)
+        public async IAsyncEnumerable<Media> FindCommonFrames(DirectoryInfo directory,
+            FrameFinderOptions options = null)
         {
             options ??= FrameFinderOptions.Default;
             var tasks = await directory.GetVideoFiles()
@@ -43,7 +44,7 @@ namespace IntroFinder.Core
                 var media = results.Single(i => i.FilePath == imageHashes.Key);
                 var introSequence = imageHashes
                     .CreateSequences((int) (media.Fps * options.SequenceTolerableSeconds))
-                    .SingleOrDefault(i => i.Duration >= options.DefaultIntroTime);
+                    .SingleOrDefault(i => i.Duration >= options.MinimumIntroTime);
                 media.Intro = introSequence;
 
                 if (introSequence == null)
