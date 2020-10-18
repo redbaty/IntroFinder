@@ -44,7 +44,7 @@ namespace IntroFinder.Core
             {
                 var media = results.Single(i => i.FilePath == imageHashes.Key);
                 var introSequence = imageHashes
-                    .CreateSequences((int) (media.Fps * options.SequenceTorableSeconds))
+                    .CreateSequences((int) (media.Fps * options.SequenceTolerableSeconds))
                     .SingleOrDefault(i => i.Duration >= options.DefaultIntroTime);
                 media.Intro = introSequence;
 

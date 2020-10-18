@@ -10,7 +10,7 @@ namespace IntroFinder.Core.Models
 
         public TimeSpan TimeLimit { get; set; } = new TimeSpan(0, 0, 5, 0);
 
-        public int SequenceTorableSeconds { get; set; } = 10;
+        public int SequenceTolerableSeconds { get; set; } = 10;
 
         public bool EnableHardwareAcceleration { get; set; }
     }
