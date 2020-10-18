@@ -24,13 +24,11 @@ namespace IntroFinder.Core
         public async IAsyncEnumerable<Media> FindCommonFrames(DirectoryInfo directory, FrameFinderOptions options = null)
         {
             options ??= FrameFinderOptions.Default;
+            var tasks = await directory.GetVideoFiles()
+                .Select(videoFile =>
+                    MediaHashingService.GetMedia(videoFile.FullName, options.TimeLimit, options.MediaHashingOptions))
+                .ToListAsync();
 
-            var tasks = directory.GetFiles("*.mkv")
-                .Select(i =>
-                    MediaHashingService.GetMedia(i.FullName, options.TimeLimit, new MediaHashingOptions
-                    {
-                        EnableHardwareAcceleration = options.EnableHardwareAcceleration
-                    }));
             var results = await Task.WhenAll(tasks);
             var forEachFile = results.SelectMany(i => i.Frames)
                 .GroupBy(i => new {i.Hash, i.FilePath})
