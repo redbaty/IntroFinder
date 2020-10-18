@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using CliWrap;
+using IntroFinder.Core.Decoders;
 using IntroFinder.Core.Exceptions;
 using IntroFinder.Core.Extensions;
 using IntroFinder.Core.Models;
@@ -41,10 +42,10 @@ namespace IntroFinder.Core
             argumentsList.Add("-");
 
             var arguments = argumentsList.Aggregate((x, y) => $"{x} {y}");
-            await using var standardInput = File.OpenRead(media.FilePath);
-
+            
             var channel = Channel.CreateUnbounded<Frame>();
-            var standardOutput = new FrameStream(channel.Writer);
+            await using var standardInput = File.OpenRead(media.FilePath);
+            await using var standardOutput = new FrameStream(new JpegBufferDecoder(channel));
             var standardErrorOutput = new StringBuilder();
             
             Logger.LogDebug("Starting FFmpeg. {@Arguments}", new
