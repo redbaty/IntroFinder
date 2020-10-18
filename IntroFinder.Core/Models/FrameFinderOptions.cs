@@ -12,6 +12,8 @@ namespace IntroFinder.Core.Models
 
         public int SequenceTolerableSeconds { get; set; } = 10;
 
+        public int? BatchSize { get; set; }
+
         public bool EnableHardwareAcceleration
         {
             get => MediaHashingOptions.EnableHardwareAcceleration;

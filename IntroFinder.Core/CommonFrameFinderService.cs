@@ -25,12 +25,30 @@ namespace IntroFinder.Core
             FrameFinderOptions options = null)
         {
             options ??= FrameFinderOptions.Default;
-            var tasks = await directory.GetVideoFiles()
-                .Select(videoFile =>
-                    MediaHashingService.GetMedia(videoFile.FullName, options.TimeLimit, options.MediaHashingOptions))
-                .ToListAsync();
+            var results = new List<Media>();
 
-            var results = await Task.WhenAll(tasks);
+            if (options.BatchSize.HasValue)
+            {
+                await foreach (var fileInfos in directory.GetVideoFiles(options).Batch(options.BatchSize.Value))
+                {
+                    var tasks = fileInfos
+                        .Select(videoFile =>
+                            MediaHashingService.GetMedia(videoFile.FullName, options.TimeLimit,
+                                options.MediaHashingOptions));
+                    results.AddRange(await Task.WhenAll(tasks));
+                }
+            }
+            else
+            {
+                var tasks = await directory.GetVideoFiles(options)
+                    .Select(videoFile =>
+                        MediaHashingService.GetMedia(videoFile.FullName, options.TimeLimit,
+                            options.MediaHashingOptions))
+                    .ToListAsync();
+
+                results.AddRange(await Task.WhenAll(tasks));
+            }
+
             var forEachFile = results.SelectMany(i => i.Frames)
                 .GroupBy(i => new {i.Hash, i.FilePath})
                 .Select(i => i.First())
