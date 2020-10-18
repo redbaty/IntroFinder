@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 using CliWrap;
 using IntroFinder.Core.Exceptions;
@@ -24,12 +25,11 @@ namespace IntroFinder.Core
 
         private ILogger<MediaHashingService> Logger { get; }
 
-        public async Task<Media> GetMedia(string filePath,
-            TimeSpan? timeLimit = null,
-            MediaHashingOptions mediaHashingOptions = null)
+        private async IAsyncEnumerable<Frame> GetFrames(Media media,
+            MediaHashingOptions mediaHashingOptions,
+            TimeSpan? timeLimit
+        )
         {
-            mediaHashingOptions ??= MediaHashingOptions.Default;
-            var hashAlgorithm = mediaHashingOptions.GetHashAlgorithm();
             var argumentsList = new List<string>();
 
             if (timeLimit.HasValue) argumentsList.Add($"-t {timeLimit.Value:hh\\:mm\\:ss\\.fff}");
@@ -41,14 +41,60 @@ namespace IntroFinder.Core
             argumentsList.Add("-");
 
             var arguments = argumentsList.Aggregate((x, y) => $"{x} {y}");
-            var frameHashes = new List<FrameHash>();
+            await using var standardInput = File.OpenRead(media.FilePath);
 
-            await using var standardInput = File.OpenRead(filePath);
-            await using var standardOutput = new FrameStream((frame, data) =>
+            var channel = Channel.CreateUnbounded<Frame>();
+            var standardOutput = new FrameStream(channel.Writer);
+            var standardErrorOutput = new StringBuilder();
+            
+            Logger.LogDebug("Starting FFmpeg. {@Arguments}", new
             {
-                using var image = Image.Load(data);
+                InputFilePath = media.FilePath,
+                Arguments = arguments
+            });
+
+            var taskResult = Cli.Wrap("ffmpeg")
+                .WithStandardInputPipe(PipeSource.FromStream(standardInput))
+                .WithStandardOutputPipe(PipeTarget.ToStream(standardOutput))
+                .WithStandardErrorPipe(PipeTarget.ToStringBuilder(standardErrorOutput))
+                .WithArguments(arguments)
+                .WithValidation(CommandResultValidation.None)
+                .ExecuteAsync()
+                .Task.ContinueWith(t =>
+                {
+                    channel.Writer.Complete();
+                    return t.Result;
+                });
+
+            await foreach (var frame in channel.Reader.ReadAllAsync())
+            {
+                yield return frame;
+            }
+
+            var result = await taskResult;
+            Logger.LogDebug("FFmpeg finished. {@Data}", result);
+            if (result.ExitCode != 0) throw new FfmpegException(standardErrorOutput.ToString());
+            var fps = GetFps(standardErrorOutput);
+            media.Fps = fps;
+        }
+
+        public async Task<Media> GetMedia(string filePath,
+            TimeSpan? timeLimit = null,
+            MediaHashingOptions mediaHashingOptions = null)
+        {
+            mediaHashingOptions ??= MediaHashingOptions.Default;
+            var media = new Media
+            {
+                FilePath = filePath,
+                Frames = new List<FrameHash>()
+            };
+
+            var hashAlgorithm = mediaHashingOptions.GetHashAlgorithm();
+            await foreach (var frame in GetFrames(media, mediaHashingOptions, timeLimit))
+            {
+                using var image = Image.Load(frame.Data);
                 var hash = hashAlgorithm.Hash(image);
-                frameHashes.Add(new FrameHash(frame,
+                media.Frames.Add(new FrameHash(frame.Position,
                     filePath,
                     hash));
 
@@ -59,37 +105,13 @@ namespace IntroFinder.Core
                     var directory = new DirectoryInfo(Path.GetDirectoryName(fileName)!);
                     if (!directory.Exists)
                         directory.Create();
-                    File.WriteAllBytes(fileName, data);
+                    await File.WriteAllBytesAsync(fileName, frame.Data);
                 }
-            });
-            var standardErrorOutput = new StringBuilder();
-
-            Logger.LogDebug("Starting FFmpeg. {@Arguments}", new
-            {
-                InputFilePath = filePath,
-                Arguments = arguments
-            });
-
-            var result = await Cli.Wrap("ffmpeg")
-                .WithStandardInputPipe(PipeSource.FromStream(standardInput))
-                .WithStandardOutputPipe(PipeTarget.ToStream(standardOutput))
-                .WithStandardErrorPipe(PipeTarget.ToStringBuilder(standardErrorOutput))
-                .WithArguments(arguments)
-                .WithValidation(CommandResultValidation.None)
-                .ExecuteAsync();
-
-            Logger.LogDebug("FFmpeg finished. {@Data}", result);
-
-            if (result.ExitCode != 0) throw new FfmpegException(standardErrorOutput.ToString());
-
-            var fps = GetFps(standardErrorOutput);
-
-            foreach (var frameHash in frameHashes)
-            {
-                frameHash.Time = TimeSpan.FromSeconds(frameHash.Frame / fps);
             }
 
-            return new Media(filePath, fps, frameHashes);
+            foreach (var frameHash in media.Frames) frameHash.Time = TimeSpan.FromSeconds(frameHash.Frame / media.Fps);
+
+            return media;
         }
 
         private static double GetFps(StringBuilder standardErrorOutput)
