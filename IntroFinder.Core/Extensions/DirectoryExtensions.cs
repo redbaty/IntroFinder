@@ -32,7 +32,10 @@ namespace IntroFinder.Core.Extensions
         
         public static async IAsyncEnumerable<FileInfo> GetVideoFiles(this DirectoryInfo directory, FrameFinderOptions frameFinderOptions)
         {
-            foreach (var file in directory.EnumerateFiles())
+            foreach (var file in directory.EnumerateFiles("*.*", new EnumerationOptions
+            {
+                RecurseSubdirectories = frameFinderOptions.Recursive
+            }))
             {
                 if (await IsValidVideoFile(file, frameFinderOptions))
                 {

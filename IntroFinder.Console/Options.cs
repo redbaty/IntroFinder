@@ -22,15 +22,18 @@ namespace IntroFinder.Console
 
         [Option("tlimit", Required = false,
             HelpText =
-                "(Default: 5 seconds) Sets the maximum duration extracted from the video files. This heavily impacts performance.")]
-        public TimeSpan TimeLimit { get; set; } = new TimeSpan(0, 0, 3, 40);
+                "(Default: 4 minutes) Sets the maximum duration extracted from the video files. This heavily impacts performance.")]
+        public TimeSpan TimeLimit { get; set; } = new TimeSpan(0, 0, 4, 0);
 
         [Option('s', "batchsize",
             HelpText =
                 "Sets the processing batch size. The smaller the value is the less load will be placed on the CPU. If set to null, all files will be placed on the queue.",
-            Min = 0,
             Default = null)]
         public int? BatchSize { get; set; }
+
+        [Option('r', "recursive", HelpText = "If set to true, all subdirectories will be searched recursively.",
+            Default = true)]
+        public bool Recursive { get; set; }
 
         [Value(0, MetaName = nameof(Directory), Required = true,
             HelpText = "The directory containing the video files.")]

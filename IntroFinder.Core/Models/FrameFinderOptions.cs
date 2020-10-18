@@ -14,6 +14,8 @@ namespace IntroFinder.Core.Models
 
         public int? BatchSize { get; set; }
 
+        public bool Recursive { get; set; }
+
         public bool EnableHardwareAcceleration
         {
             get => MediaHashingOptions.EnableHardwareAcceleration;
