@@ -42,7 +42,12 @@ namespace IntroFinder.Console
 
             var commonFrameFinderService = serviceProvider.GetService<CommonFrameFinderService>();
             var medias = await commonFrameFinderService.FindCommonFrames(directory).ToListAsync();
-            var x = JsonSerializer.Serialize(medias);
+            var outputFile = Path.Combine(Path.GetDirectoryName(directory.FullName)!, "intro_index.json");
+
+            Log.Logger.Information("Index has been written at {outputFile}", outputFile);
+
+            var serializedOutput = JsonSerializer.Serialize(medias);
+            await File.WriteAllTextAsync(outputFile, serializedOutput);
         }
     }
 }
