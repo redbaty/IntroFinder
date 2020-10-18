@@ -2,20 +2,34 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Channels;
 
 namespace IntroFinder.Core.Models
 {
+    internal class Frame
+    {
+        public byte[] Data { get; }
+
+        public int Position { get; }
+
+        public Frame(byte[] data, int position)
+        {
+            Data = data;
+            Position = position;
+        }
+    }
+
     internal class FrameStream : Stream
     {
-        public FrameStream(Action<int, byte[]> onImageDetected)
-        {
-            OnImageDetected = onImageDetected;
-        }
+        private ChannelWriter<Frame> ChannelWriter { get; }
 
+        public FrameStream(ChannelWriter<Frame> channelWriter)
+        {
+            ChannelWriter = channelWriter;
+        }
+        
         private int CurrentFrame { get; set; }
         private byte[] LastBuffer { get; set; }
-        private Action<int, byte[]> OnImageDetected { get; }
-
         private static byte[] StartSignature { get; } = {255, 216, 255, 224};
         private static byte[] EndSignature { get; } = {255, 217};
 
@@ -24,6 +38,7 @@ namespace IntroFinder.Core.Models
         public override bool CanWrite { get; } = true;
         public override long Length => CurrentFrame;
         public override long Position { get; set; }
+        
 
         public override void Flush()
         {
@@ -43,7 +58,7 @@ namespace IntroFinder.Core.Models
         {
             throw new NotImplementedException();
         }
-
+        
         private static int SearchBytes(byte[] haystack, byte[] needle)
         {
             if (haystack == null)
@@ -126,7 +141,7 @@ namespace IntroFinder.Core.Models
 
         private void CreateImage(byte[] data)
         {
-            OnImageDetected?.Invoke(CurrentFrame, data);
+            ChannelWriter.TryWrite(new Frame(data, CurrentFrame));
             CurrentFrame++;
         }
     }
