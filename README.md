@@ -8,5 +8,5 @@ This project aims to provide a fast and reliable way to auto-detect TV shows int
 
 # Limitations
 * Currently only `.mkv` files are found on the specified directory. This issue will be tracked [here](https://github.com/redbaty/IntroFinder/issues/1).
-* Currently none of the options can be changed, so [these defaults](https://github.com/redbaty/IntroFinder/blob/master/IntroFinder.Core/Models/FrameFinderOptions.cs will be used to determined a 'valid intro'.
+* Currently none of the options can be changed, so [these defaults](https://github.com/redbaty/IntroFinder/blob/master/IntroFinder.Core/Models/FrameFinderOptions.cs) will be used to determined a 'valid intro'.
 * If there's a recap that matches the frames of the previous episode it is possible that it will be detected as an intro part.
