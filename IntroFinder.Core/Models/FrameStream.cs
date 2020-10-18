@@ -6,19 +6,6 @@ using System.Threading.Channels;
 
 namespace IntroFinder.Core.Models
 {
-    internal class Frame
-    {
-        public byte[] Data { get; }
-
-        public int Position { get; }
-
-        public Frame(byte[] data, int position)
-        {
-            Data = data;
-            Position = position;
-        }
-    }
-
     internal class FrameStream : Stream
     {
         private ChannelWriter<Frame> ChannelWriter { get; }
