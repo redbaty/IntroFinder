@@ -7,35 +7,34 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CliWrap;
-using CoenM.ImageHash.HashAlgorithms;
 using IntroFinder.Core.Exceptions;
+using IntroFinder.Core.Extensions;
 using IntroFinder.Core.Models;
 using Microsoft.Extensions.Logging;
-using Image = SixLabors.ImageSharp.Image;
+using SixLabors.ImageSharp;
 
 namespace IntroFinder.Core
 {
-    public class FrameGatheringService
+    public class MediaHashingService
     {
-        private static readonly AverageHash HashAlgorithm = new AverageHash();
-
-        public FrameGatheringService(ILogger<FrameGatheringService> logger)
+        public MediaHashingService(ILogger<MediaHashingService> logger)
         {
             Logger = logger;
         }
 
-        private ILogger<FrameGatheringService> Logger { get; }
+        private ILogger<MediaHashingService> Logger { get; }
 
         public async Task<Media> GetMedia(string filePath,
             TimeSpan? timeLimit = null,
-            bool enableHardwareAcceleration = false,
-            bool dumpFiles = false)
+            MediaHashingOptions mediaHashingOptions = null)
         {
+            mediaHashingOptions ??= MediaHashingOptions.Default;
+            var hashAlgorithm = mediaHashingOptions.GetHashAlgorithm();
             var argumentsList = new List<string>();
 
             if (timeLimit.HasValue) argumentsList.Add($"-t {timeLimit.Value:hh\\:mm\\:ss\\.fff}");
 
-            if (enableHardwareAcceleration) argumentsList.Add("-hwaccel auto");
+            if (mediaHashingOptions.EnableHardwareAcceleration) argumentsList.Add("-hwaccel auto");
 
             argumentsList.Add("-i -");
             argumentsList.Add("-an -s 640x360 -f image2pipe");
@@ -49,12 +48,12 @@ namespace IntroFinder.Core
             await using var standardOutput = new FrameStream((frame, data) =>
             {
                 using var image = Image.Load(data);
-                var hash = HashAlgorithm.Hash(image);
+                var hash = hashAlgorithm.Hash(image);
                 frameHashes.Add(new FrameHash(frame,
                     filePath,
                     hash));
 
-                if (dumpFiles)
+                if (mediaHashingOptions.DumpFiles)
                 {
                     var fileName = Path.Combine(Path.GetDirectoryName(filePath)!, "frames",
                         $"frame-{frame}.png");

@@ -10,14 +10,14 @@ namespace IntroFinder.Core
 {
     public class CommonFrameFinderService
     {
-        public CommonFrameFinderService(FrameGatheringService frameGatheringService,
+        public CommonFrameFinderService(MediaHashingService mediaHashingService,
             ILogger<CommonFrameFinderService> logger)
         {
-            FrameGatheringService = frameGatheringService;
+            MediaHashingService = mediaHashingService;
             Logger = logger;
         }
 
-        private FrameGatheringService FrameGatheringService { get; }
+        private MediaHashingService MediaHashingService { get; }
 
         private ILogger<CommonFrameFinderService> Logger { get; }
 
@@ -27,7 +27,10 @@ namespace IntroFinder.Core
 
             var tasks = directory.GetFiles("*.mkv")
                 .Select(i =>
-                    FrameGatheringService.GetMedia(i.FullName, options.TimeLimit, options.EnableHardwareAcceleration));
+                    MediaHashingService.GetMedia(i.FullName, options.TimeLimit, new MediaHashingOptions
+                    {
+                        EnableHardwareAcceleration = options.EnableHardwareAcceleration
+                    }));
             var results = await Task.WhenAll(tasks);
             var forEachFile = results.SelectMany(i => i.Frames)
                 .GroupBy(i => new {i.Hash, i.FilePath})
