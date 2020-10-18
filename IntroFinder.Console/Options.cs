@@ -32,7 +32,7 @@ namespace IntroFinder.Console
         public int? BatchSize { get; set; }
 
         [Option('r', "recursive", HelpText = "If set to true, all subdirectories will be searched recursively.",
-            Default = true)]
+            Default = false)]
         public bool Recursive { get; set; }
 
         [Value(0, MetaName = nameof(Directory), Required = true,
