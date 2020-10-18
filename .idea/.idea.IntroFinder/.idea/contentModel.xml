@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\sources\Aif" t="IncludeFlat">
+      <e p="IntroFinder.Console" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="IntroFinder.Console.csproj" t="IncludeRecursive" />
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="IntroFinder.Console.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+        <e p="Program.cs" t="Include" />
+        <e p="Properties" t="Include">
+          <e p="launchSettings.json" t="Include" />
+        </e>
+      </e>
+      <e p="IntroFinder.Core" t="IncludeRecursive">
+        <e p="bin" t="ExcludeRecursive" />
+        <e p="CommonFrameFinderService.cs" t="Include" />
+        <e p="Converters" t="Include">
+          <e p="TimespanStringConverter.cs" t="Include" />
+        </e>
+        <e p="Exceptions" t="Include">
+          <e p="FfmpegException.cs" t="Include" />
+        </e>
+        <e p="Extensions" t="Include">
+          <e p="ImageHashExtensions.cs" t="Include" />
+        </e>
+        <e p="FrameGatheringService.cs" t="Include" />
+        <e p="IntroFinder.Core.csproj" t="IncludeRecursive" />
+        <e p="Models" t="Include">
+          <e p="FrameFinderOptions.cs" t="Include" />
+          <e p="FrameHash.cs" t="Include" />
+          <e p="FrameStream.cs" t="Include" />
+          <e p="Media.cs" t="Include" />
+          <e p="Sequence.cs" t="Include" />
+        </e>
+        <e p="obj" t="ExcludeRecursive">
+          <e p="Debug" t="Include">
+            <e p="netcoreapp3.1" t="Include">
+              <e p="IntroFinder.Core.AssemblyInfo.cs" t="Include" />
+            </e>
+          </e>
+        </e>
+      </e>
+      <e p="IntroFinder.sln" t="IncludeFlat" />
+      <e p="packages" t="ExcludeRecursive" />
+    </e>
+    <e p="C:\Users\Marcos\AppData\Local\JetBrains\Rider2020.3\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\Marcos\AppData\Local\JetBrains\Rider2020.3\resharper-host\Local\Transient\Rider\v203\SolutionCaches\_IntroFinder.1873421509.00" t="ExcludeRecursive" />
+  </component>
+</project>

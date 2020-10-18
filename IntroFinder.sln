@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30608.117
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntroFinder.Console", "IntroFinder.Console\IntroFinder.Console.csproj", "{5AA0CFC5-DA11-41D7-90FE-963DF164B155}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntroFinder.Core", "IntroFinder.Core\IntroFinder.Core.csproj", "{E992C84D-8883-46AD-900E-4437300660AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Debug|x64.ActiveCfg = Debug|x64
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Debug|x64.Build.0 = Debug|x64
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Release|x64.ActiveCfg = Release|x64
+		{5AA0CFC5-DA11-41D7-90FE-963DF164B155}.Release|x64.Build.0 = Release|x64
+		{E992C84D-8883-46AD-900E-4437300660AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E992C84D-8883-46AD-900E-4437300660AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E992C84D-8883-46AD-900E-4437300660AA}.Debug|x64.ActiveCfg = Debug|x64
+		{E992C84D-8883-46AD-900E-4437300660AA}.Debug|x64.Build.0 = Debug|x64
+		{E992C84D-8883-46AD-900E-4437300660AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E992C84D-8883-46AD-900E-4437300660AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E992C84D-8883-46AD-900E-4437300660AA}.Release|x64.ActiveCfg = Release|x64
+		{E992C84D-8883-46AD-900E-4437300660AA}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5B9EFD24-CA0C-4638-8E69-51F5784D9976}
+	EndGlobalSection
+EndGlobal
