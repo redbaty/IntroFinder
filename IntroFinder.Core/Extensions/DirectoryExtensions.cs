@@ -6,7 +6,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CliWrap;
-using CliWrap.Buffered;
 using IntroFinder.Core.Models;
 
 namespace IntroFinder.Core.Extensions
