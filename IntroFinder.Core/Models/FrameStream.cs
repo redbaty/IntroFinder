@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using IntroFinder.Core.Decoders;
 
 namespace IntroFinder.Core.Models
@@ -26,23 +28,34 @@ namespace IntroFinder.Core.Models
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override long Seek(long offset, SeekOrigin origin)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override void SetLength(long value)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
+        }
+
+        public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        {
+            return Decoder.WriteAsync(buffer[..count]);
+        }
+
+        public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer,
+            CancellationToken cancellationToken = new CancellationToken())
+        {
+            throw new NotSupportedException();
         }
 
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            Decoder.Write(buffer[..count]);
+            throw new NotSupportedException();
         }
     }
 }

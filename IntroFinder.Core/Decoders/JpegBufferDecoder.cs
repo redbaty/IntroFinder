@@ -1,5 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Channels;
+using System.Threading.Tasks;
 using IntroFinder.Core.Extensions;
 using IntroFinder.Core.Models;
 
@@ -13,51 +16,129 @@ namespace IntroFinder.Core.Decoders
         }
 
         private int CurrentFrame { get; set; }
-        private byte[] LastBuffer { get; set; }
+        private List<byte> LastBuffer { get; } = new List<byte>();
         private static byte[] StartSignature { get; } = {255, 216, 255, 224};
         private static byte[] EndSignature { get; } = {255, 217};
 
         public ChannelWriter<Frame> ChannelWriter { get; }
 
-        public void Write(byte[] buffer)
+        private bool FrameStarted { get; set; }
+
+        private int? PositionStart { get; set; }
+        private int? PositionEnd { get; set; }
+
+        public async Task WriteAsync(byte[] buffer)
         {
-            var starts = buffer.SearchBytesRecursive(StartSignature).ToArray();
-            var ends = buffer.SearchBytesRecursive(EndSignature).ToArray();
+            var currentStartSignaturePosition = 0;
+            var currentEndSignaturePosition = 0;
 
-            if (LastBuffer != null)
+
+            for (var index = 0; index < buffer.Length; index++)
             {
-                var minIndex = new[] {starts.DefaultIfEmpty().First(), ends.DefaultIfEmpty().First()}.Min();
-                var concat = LastBuffer.Concat(buffer[..minIndex]).ToArray();
-                CreateImage(concat);
-                LastBuffer = null;
+                var b = buffer[index];
 
-                if (starts.Length > ends.Length)
-                    starts = starts[1..];
-                else if (ends.Length > starts.Length)
-                    ends = ends[1..];
+                if (!FrameStarted && b == StartSignature[currentStartSignaturePosition])
+                {
+                    var length = StartSignature.Length - 1;
+                    if (currentStartSignaturePosition == length)
+                    {
+                        FrameStarted = true;
+                        PositionStart = index - length;
+                        currentStartSignaturePosition = 0;
+                    }
+                    else
+                    {
+                        currentStartSignaturePosition++;
+                    }
+                }
+                else
+                {
+                    currentStartSignaturePosition = 0;
+                }
 
-                if (ends.Length == 0 && starts.Length == 0) return;
+                if (FrameStarted && b == EndSignature[currentEndSignaturePosition])
+                {
+                    var length = EndSignature.Length - 1;
+                    if (currentEndSignaturePosition == length)
+                    {
+                        PositionEnd = index + 1;
+
+                        if (PositionStart.HasValue)
+                        {
+                            var bytes = buffer[PositionStart.Value..PositionEnd.Value];
+                            await CreateImage(bytes);
+                            PositionStart = null;
+                        }
+                        else
+                        {
+                            if (LastBuffer.Count > 0)
+                            {
+                                var array = LastBuffer.Concat(buffer[..PositionEnd.Value]).ToArray();
+                                await CreateImage(array);
+                                LastBuffer.Clear();
+                            }
+                        }
+
+                        FrameStarted = false;
+                        currentEndSignaturePosition = 0;
+                    }
+                    else
+                    {
+                        currentEndSignaturePosition++;
+                    }
+                }
+                else
+                {
+                    currentEndSignaturePosition = 0;
+                }
             }
 
-            var max = starts.Length > ends.Length ? ends.Length : starts.Length;
-
-            for (var index = 0; index < max; index++)
+            if (PositionEnd.HasValue)
             {
-                var start = starts[index];
-                var end = ends[index];
-                CreateImage(buffer[start..end]);
+                var delta = buffer.Length - PositionEnd.Value;
+
+                if (delta > 1)
+                {
+                    LastBuffer.AddRange(buffer[PositionEnd.Value..]);
+                }
             }
 
-            if (ends.Length != starts.Length)
-            {
-                var maxIndex = starts.Length > ends.Length ? starts.Last() : ends.Last();
-                LastBuffer = buffer[maxIndex..];
-            }
+            PositionStart = null;
+            PositionEnd = null;
         }
 
-        private void CreateImage(byte[] data)
+        private async Task CreateImage(byte[] data)
         {
-            ChannelWriter.TryWrite(new Frame(data, CurrentFrame));
+#if DEBUG
+            var malformed = false;
+
+            for (var index = 0; index < StartSignature.Length; index++)
+            {
+                if (StartSignature[index] != data[index])
+                {
+                    malformed = true;
+                }
+            }
+
+            var dataIndex = 0;
+            for (var index = EndSignature.Length - 1; index >= 0; index--)
+            {
+                if (EndSignature[index] != data[data.Length - 1 - dataIndex])
+                {
+                    malformed = true;
+                }
+
+                dataIndex++;
+            }
+
+            if (malformed)
+            {
+                Console.WriteLine("Malformed frame.");
+                throw new InvalidOperationException("Malformed frame.");
+            }
+#endif
+
+            await ChannelWriter.WriteAsync(new Frame(data, CurrentFrame));
             CurrentFrame++;
         }
     }
