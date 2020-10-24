@@ -1,4 +1,5 @@
 ﻿using System.Threading.Channels;
+using System.Threading.Tasks;
 using IntroFinder.Core.Models;
 
 namespace IntroFinder.Core.Decoders
@@ -6,6 +7,7 @@ namespace IntroFinder.Core.Decoders
     internal interface IFrameBufferDecoder
     {
         ChannelWriter<Frame> ChannelWriter { get; }
-        void Write(byte[] buffer);
+        
+        Task WriteAsync(byte[] buffer);
     }
 }
