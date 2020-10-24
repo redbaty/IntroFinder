@@ -102,7 +102,7 @@ namespace IntroFinder.Core
                 if (mediaHashingOptions.DumpFiles)
                 {
                     var fileName = Path.Combine(Path.GetDirectoryName(filePath)!, "frames",
-                        $"frame-{frame}.png");
+                        $"frame-{frame.Position}.png");
                     var directory = new DirectoryInfo(Path.GetDirectoryName(fileName)!);
                     if (!directory.Exists)
                         directory.Create();
