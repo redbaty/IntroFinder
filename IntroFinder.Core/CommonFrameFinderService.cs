@@ -10,14 +10,10 @@ namespace IntroFinder.Core
 {
     public class CommonFrameFinderService
     {
-        public CommonFrameFinderService(MediaHashingService mediaHashingService,
-            ILogger<CommonFrameFinderService> logger)
+        public CommonFrameFinderService(ILogger<CommonFrameFinderService> logger)
         {
-            MediaHashingService = mediaHashingService;
             Logger = logger;
         }
-
-        private MediaHashingService MediaHashingService { get; }
 
         private ILogger<CommonFrameFinderService> Logger { get; }
 
@@ -33,7 +29,7 @@ namespace IntroFinder.Core
                 {
                     var tasks = fileInfos
                         .Select(videoFile =>
-                            MediaHashingService.GetMedia(videoFile.FullName, options.TimeLimit,
+                            MediaHashing.GetMedia(videoFile.FullName, options.TimeLimit,
                                 options.MediaHashingOptions));
                     results.AddRange(await Task.WhenAll(tasks));
                 }
@@ -42,7 +38,7 @@ namespace IntroFinder.Core
             {
                 var tasks = await directory.GetVideoFiles(options)
                     .Select(videoFile =>
-                        MediaHashingService.GetMedia(videoFile.FullName, options.TimeLimit,
+                        MediaHashing.GetMedia(videoFile.FullName, options.TimeLimit,
                             options.MediaHashingOptions))
                     .ToListAsync();
 

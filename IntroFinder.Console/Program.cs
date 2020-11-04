@@ -36,7 +36,6 @@ namespace IntroFinder.Console
             }
 
             var serviceCollection = new ServiceCollection();
-            serviceCollection.AddSingleton<MediaHashingService>();
             serviceCollection.AddSingleton<CommonFrameFinderService>();
             serviceCollection.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
             var serviceProvider = serviceCollection.BuildServiceProvider();
