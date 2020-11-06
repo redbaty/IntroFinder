@@ -51,7 +51,9 @@ namespace IntroFinder.Console
                 TimeLimit = options.TimeLimit, EnableHardwareAcceleration = options.HardwareAcceleration,
                 MinimumIntroTime = options.MinimumIntroTime,
                 SequenceTolerableSeconds = options.SequenceTolerableSeconds, BatchSize = options.BatchSize,
-                Recursive = options.Recursive
+                Recursive = options.Recursive,
+                FFmpegBinaryPath = options.FFmpegPath,
+                FFprobeBinaryPath = options.FFprobePath
             };
 
             var commonFrameFinderService = serviceProvider.GetService<CommonFrameFinderService>();

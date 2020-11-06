@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CommandLine;
 
 namespace IntroFinder.Console
@@ -34,6 +34,12 @@ namespace IntroFinder.Console
         [Option('r', "recursive", HelpText = "If set to true, all subdirectories will be searched recursively.",
             Default = false)]
         public bool Recursive { get; set; }
+
+        [Option("ffmpeg", HelpText = "The ffmpeg binary path.")]
+        public string FFmpegPath { get; set; }
+
+        [Option("ffprobe", HelpText = "The ffprobe binary path.")]
+        public string FFprobePath { get; set; }
 
         [Value(0, MetaName = nameof(Directory), Required = true,
             HelpText = "The directory containing the video files.")]

@@ -28,7 +28,9 @@ namespace IntroFinder.Core
                 TimeLimit = timeLimit,
                 FrameSize = new FrameSize{Height = 64, Width = 64},
                 FrameFormat = FrameFormat.Jpg,
-                EnableHardwareAcceleration = mediaHashingOptions.EnableHardwareAcceleration
+                EnableHardwareAcceleration = mediaHashingOptions.EnableHardwareAcceleration,
+                FFmpegBinaryPath = mediaHashingOptions.FFmpegBinaryPath,
+                FFprobeBinaryPath = mediaHashingOptions.FFprobeBinaryPath
             }, fps => media.Fps = fps);
         }
 

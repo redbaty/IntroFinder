@@ -22,6 +22,18 @@ namespace IntroFinder.Core.Models
             set => MediaHashingOptions.EnableHardwareAcceleration = value;
         }
 
+        public string FFmpegBinaryPath
+        {
+            get => MediaHashingOptions.FFmpegBinaryPath;
+            set => MediaHashingOptions.FFmpegBinaryPath = value;
+        }
+
+        public string FFprobeBinaryPath
+        {
+            get => MediaHashingOptions.FFprobeBinaryPath;
+            set => MediaHashingOptions.FFprobeBinaryPath = value;
+        }
+
         public MediaHashingOptions MediaHashingOptions { get; set; } = new MediaHashingOptions();
     }
 }
