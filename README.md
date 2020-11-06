@@ -2,7 +2,7 @@
 This project aims to provide a fast and reliable way to auto-detect TV shows intros. Currently at an alpha state.
 
 # Dependencies
-* [:movie_camera: FFmpeg](https://github.com/FFmpeg/FFmpeg) - for extracting frames from the video files.
+* [:movie_camera: FFmpeg](https://github.com/FFmpeg/FFmpeg) and [FFmpeg.FrameExtractor](https://github.com/redbaty/FFmpeg.FrameExtractor) - for extracting frames from the video files.
 * [:framed_picture: ImageSharp](https://github.com/SixLabors/ImageSharp) and [ImageHash](https://github.com/coenm/ImageHash) - for calculating average image hash. 
 * [:desktop_computer: CliWrap](https://github.com/Tyrrrz/CliWrap) - for calling FFmpeg and piping its outputs.
 * [:computer: CommandLineParser](https://github.com/commandlineparser/commandline) - for parsing console arguments.
