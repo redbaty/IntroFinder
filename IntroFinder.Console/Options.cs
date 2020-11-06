@@ -28,7 +28,7 @@ namespace IntroFinder.Console
         [Option('s', "batchsize",
             HelpText =
                 "Sets the processing batch size. The smaller the value is the less load will be placed on the CPU. If set to null, all files will be placed on the queue.",
-            Default = null)]
+            Default = 10)]
         public int? BatchSize { get; set; }
 
         [Option('r', "recursive", HelpText = "If set to true, all subdirectories will be searched recursively.",
