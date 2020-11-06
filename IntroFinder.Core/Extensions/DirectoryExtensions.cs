@@ -53,7 +53,7 @@ namespace IntroFinder.Core.Extensions
            var standardOutput = new StringBuilder();
             var standardErrorOutput = new StringBuilder();
             
-            var result = await Cli.Wrap("ffprobe")
+            var result = await Cli.Wrap(frameFinderOptions.FFprobeBinaryPath)
                 .WithArguments($"-print_format json -show_format -show_streams \"{file.FullName}\"")
                 .WithStandardOutputPipe(PipeTarget.ToStringBuilder(standardOutput))
                 .WithStandardErrorPipe(PipeTarget.ToStringBuilder(standardErrorOutput))
