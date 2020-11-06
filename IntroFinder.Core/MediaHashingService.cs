@@ -26,7 +26,7 @@ namespace IntroFinder.Core
             return FrameExtractionService.GetFrames(media.FilePath, new FrameExtractionOptions
             {
                 TimeLimit = timeLimit,
-                FrameSize = new FrameSize{Height = 320, Width = 640},
+                FrameSize = new FrameSize{Height = 64, Width = 64},
                 FrameFormat = FrameFormat.Jpg,
                 EnableHardwareAcceleration = mediaHashingOptions.EnableHardwareAcceleration
             }, fps => media.Fps = fps);
