@@ -14,15 +14,19 @@ namespace IntroFinder.Core.Extensions
     {
         public static async IAsyncEnumerable<List<FileInfo>> Batch(this IAsyncEnumerable<FileInfo> fileEnumerable, int batchSize)
         {
-            var currentBatchSize = 0;
-            var currentBatch = new List<FileInfo>();
+            if (batchSize < 1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(batchSize), batchSize,
+                    "Batch size must be greater than or equal to 1.");
+            }
+
+            var currentBatch = new List<FileInfo>(batchSize);
 
             await foreach (var fileInfo in fileEnumerable)
             {
                 currentBatch.Add(fileInfo);
-                currentBatchSize++;
 
-                if (currentBatchSize == batchSize)
+                if (currentBatch.Count == batchSize)
                 {
                     yield return currentBatch;
                     currentBatch.Clear();
