@@ -9,21 +9,30 @@ using SixLabors.ImageSharp;
 
 namespace IntroFinder.Core
 {
-    public static class MediaHashing
+    public class MediaHashingService
     {
-        private static IAsyncEnumerable<Frame> GetFrames(Media media,
+        public MediaHashingService(FrameExtractionService frameExtractionService)
+        {
+            FrameExtractionService = frameExtractionService;
+        }
+
+        private FrameExtractionService FrameExtractionService { get; }
+        
+        private IAsyncEnumerable<Frame> GetFrames(Media media,
             MediaHashingOptions mediaHashingOptions,
             TimeSpan? timeLimit
         )
         {
-            return FFmpeg.GetFrames(media.FilePath, new FrameExtractionOptions
+            return FrameExtractionService.GetFrames(media.FilePath, new FrameExtractionOptions
             {
-                DumpFiles = mediaHashingOptions.DumpFiles,
+                TimeLimit = timeLimit,
+                FrameSize = new FrameSize{Height = 320, Width = 640},
+                FrameFormat = FrameFormat.Jpg,
                 EnableHardwareAcceleration = mediaHashingOptions.EnableHardwareAcceleration
-            }, timeLimit, fps => media.Fps = fps);
+            }, fps => media.Fps = fps);
         }
 
-        public static async Task<Media> GetMedia(string filePath,
+        public async Task<Media> GetMedia(string filePath,
             TimeSpan? timeLimit = null,
             MediaHashingOptions mediaHashingOptions = null)
         {

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using CommandLine;
+using FrameExtractor;
 using IntroFinder.Core;
 using IntroFinder.Core.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using Serilog.Events;
 
 namespace IntroFinder.Console
 {
@@ -22,9 +24,11 @@ namespace IntroFinder.Console
         private static async Task Run(Options options)
         {
             var startNew = Stopwatch.StartNew();
-            Log.Logger = new LoggerConfiguration().Enrich.FromLogContext()
-                .WriteTo.Console()
+            Log.Logger = new LoggerConfiguration().Enrich
+                .FromLogContext()
+                .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}")
                 .MinimumLevel.Debug()
+                .MinimumLevel.Override("FrameExtractor.FrameExtractionService", LogEventLevel.Information)
                 .CreateLogger();
 
             var directory = new DirectoryInfo(options.Directory);
@@ -36,6 +40,8 @@ namespace IntroFinder.Console
             }
 
             var serviceCollection = new ServiceCollection();
+            serviceCollection.AddSingleton<FrameExtractionService>();
+            serviceCollection.AddSingleton<MediaHashingService>();
             serviceCollection.AddSingleton<CommonFrameFinderService>();
             serviceCollection.AddLogging(loggingBuilder => loggingBuilder.AddSerilog(dispose: true));
             var serviceProvider = serviceCollection.BuildServiceProvider();
