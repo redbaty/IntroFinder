@@ -4,7 +4,7 @@ namespace IntroFinder.Core.Models
 {
     public class MediaHashingOptions
     {
-        internal static MediaHashingOptions Default { get; } = new MediaHashingOptions();
+        internal static MediaHashingOptions Default { get; } = new();
 
         public bool EnableHardwareAcceleration { get; set; }
 
@@ -12,8 +12,8 @@ namespace IntroFinder.Core.Models
 
         public MediaHashingTypes HashingType { get; set; } = MediaHashingTypes.AverageHash;
 
-        public string FFmpegBinaryPath { get; set; }
+        public string FFmpegBinaryPath { get; set; } = "ffmpeg";
 
-        public string FFprobeBinaryPath { get; set; }
+        public string FFprobeBinaryPath { get; set; } = "ffprobe";
     }
 }
