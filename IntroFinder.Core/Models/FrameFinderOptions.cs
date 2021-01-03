@@ -4,11 +4,11 @@ namespace IntroFinder.Core.Models
 {
     public class FrameFinderOptions
     {
-        internal static FrameFinderOptions Default { get; } = new FrameFinderOptions();
+        internal static FrameFinderOptions Default { get; } = new();
 
-        public TimeSpan MinimumIntroTime { get; set; } = new TimeSpan(0, 0, 1, 10);
+        public TimeSpan MinimumIntroTime { get; set; } = new(0, 0, 1, 10);
 
-        public TimeSpan TimeLimit { get; set; } = new TimeSpan(0, 0, 5, 0);
+        public TimeSpan TimeLimit { get; set; } = new(0, 0, 5, 0);
 
         public int SequenceTolerableSeconds { get; set; } = 10;
 
@@ -34,6 +34,6 @@ namespace IntroFinder.Core.Models
             set => MediaHashingOptions.FFprobeBinaryPath = value;
         }
 
-        public MediaHashingOptions MediaHashingOptions { get; set; } = new MediaHashingOptions();
+        public MediaHashingOptions MediaHashingOptions { get; set; } = new();
     }
 }
