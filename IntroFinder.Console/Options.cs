@@ -18,12 +18,12 @@ namespace IntroFinder.Console
         [Option("tmin", Required = false,
             HelpText =
                 "(Default: 1 minute and 10 seconds) Sets the minimum time required for a sequence to be considered an intro.")]
-        public TimeSpan MinimumIntroTime { get; set; } = new TimeSpan(0, 0, 1, 10);
+        public TimeSpan MinimumIntroTime { get; set; } = new(0, 0, 1, 10);
 
         [Option("tlimit", Required = false,
             HelpText =
                 "(Default: 4 minutes) Sets the maximum duration extracted from the video files. This heavily impacts performance.")]
-        public TimeSpan TimeLimit { get; set; } = new TimeSpan(0, 0, 4, 0);
+        public TimeSpan TimeLimit { get; set; } = new(0, 0, 4, 0);
 
         [Option('s', "batchsize",
             HelpText =

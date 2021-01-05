@@ -13,7 +13,7 @@ namespace IntroFinder.Core.Extensions
             {
                 MediaHashingTypes.AverageHash => new AverageHash(),
                 MediaHashingTypes.PerceptualHash => new PerceptualHash(),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(options))
             };
     }
 }

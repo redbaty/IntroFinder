@@ -2,7 +2,7 @@
 
 namespace IntroFinder.Core.Models
 {
-    public class FFprobeOutput
+    internal class FFprobeOutput
     {
         [JsonPropertyName("format")]
         public Format Format { get; set; }

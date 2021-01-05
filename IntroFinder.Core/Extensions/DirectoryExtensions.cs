@@ -65,7 +65,7 @@ namespace IntroFinder.Core.Extensions
                 var json = standardOutput.ToString();
                 var parsed = JsonSerializer.Deserialize<FFprobeOutput>(json);
 
-                if (parsed.Format.Duration == null)
+                if (parsed?.Format.Duration == null)
                 {
                     return false;
                 }

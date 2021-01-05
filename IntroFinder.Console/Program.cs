@@ -57,7 +57,7 @@ namespace IntroFinder.Console
             };
 
             var commonFrameFinderService = serviceProvider.GetService<CommonFrameFinderService>();
-            var medias = await commonFrameFinderService.FindCommonFrames(directory, frameOptions).ToListAsync();
+            var medias = await commonFrameFinderService!.FindCommonFrames(directory, frameOptions).ToListAsync();
             var outputFile = Path.Combine(directory.FullName, "intro_index.json");
 
             Log.Logger.Information("Index has been written at {outputFile}", outputFile);
