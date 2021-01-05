@@ -1,8 +1,9 @@
-﻿using IntroFinder.Core.Enums;
+﻿using FrameExtractor;
+using IntroFinder.Core.Enums;
 
 namespace IntroFinder.Core.Models
 {
-    public class MediaHashingOptions
+    public class MediaHashingOptions : FFmpegOptions
     {
         internal static MediaHashingOptions Default { get; } = new();
 
@@ -11,9 +12,5 @@ namespace IntroFinder.Core.Models
         public bool DumpFiles { get; set; }
 
         public MediaHashingTypes HashingType { get; set; } = MediaHashingTypes.AverageHash;
-
-        public string FFmpegBinaryPath { get; set; } = "ffmpeg";
-
-        public string FFprobeBinaryPath { get; set; } = "ffprobe";
     }
 }
